@@ -15,6 +15,7 @@ interface IBook {
   size: string;
   sizeByBytes: string;
   format: string;
+  bookId: string;
 }
 export default async function getBooksInfo(
   req: NextApiRequest,
@@ -78,6 +79,7 @@ export default async function getBooksInfo(
       size: "",
       sizeByBytes: "",
       format: "",
+      bookId: "",
     };
     newBook.title =
       clear($(element).find("td:nth-child(3) a").text() ?? "") ?? "";
@@ -98,6 +100,8 @@ export default async function getBooksInfo(
 
     newBook.format =
       clear($(element).find("td:nth-child(6)").text().trim() ?? "") ?? "";
+    const matchResult = newBook.link?.match(/co_obra=(\d+)/);
+newBook.bookId = matchResult ? matchResult[1] : "";
 
     if (!Object.values(newBook).every((value) => value.trim() === "")) {
       Object.keys(newBook).forEach((key) => {
