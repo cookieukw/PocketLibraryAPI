@@ -7,6 +7,15 @@ import utils from "../classes/utils";
 const clear = utils.clear;
 const convertToBytes = utils.convertToBytes;
 
+interface IBook {
+  title: string;
+  author: string;
+  font: string;
+  link: string;
+  size: string;
+  sizeByBytes: string;
+  format: string;
+}
 export default async function getBooksInfo(
   req: NextApiRequest,
   res: NextApiResponse
@@ -53,48 +62,51 @@ export default async function getBooksInfo(
   const $ = cheerio.load(decodedHtml, {
     decodeEntities: true,
     xmlMode: true,
-    xml: {
-      normalizeWhitespace: true,
-    },
   });
 
-  const bookList: Array<{
-    title: string;
-    author: string;
-    font: string;
-    link: string;
-    size: string;
-    sizeByBytes: number;
-    format: string;
-  }> = [];
+  const bookList: IBook[] = [];
+
   const table = $("#res").find("tbody");
   const books = $(table).find("tr");
 
   books.each((index, element) => {
-    const title = clear($(element).find("td:nth-child(3) a").text());
+    const newBook: IBook = {
+      title: "",
+      author: "",
+      font: "",
+      link: "",
+      size: "",
+      sizeByBytes: "",
+      format: "",
+    };
+    newBook.title =
+      clear($(element).find("td:nth-child(3) a").text() ?? "") ?? "";
 
-    const author = clear($(element).find("td:nth-child(4)").text().trim());
+    newBook.author =
+      clear($(element).find("td:nth-child(4)").text().trim() ?? "") ?? "";
 
-    const font = clear($(element).find("td:nth-child(5)").text().trim());
+    newBook.font =
+      clear($(element).find("td:nth-child(5)").text().trim() ?? "") ?? "";
 
-    const link = clear($(element).find("td:nth-child(2) a").attr("href"));
+    newBook.link =
+      clear($(element).find("td:nth-child(2) a").attr("href") ?? "") ?? "";
 
-    const size = clear($(element).find("td:nth-child(7)").text().trim());
+    newBook.size =
+      clear($(element).find("td:nth-child(7)").text().trim() ?? "") ?? "";
 
-    const sizeByBytes = convertToBytes(size);
+    newBook.sizeByBytes = convertToBytes(newBook.size ?? "").toString() ?? "";
 
-    const format = clear($(element).find("td:nth-child(6)").text().trim());
+    newBook.format =
+      clear($(element).find("td:nth-child(6)").text().trim() ?? "") ?? "";
 
-    if (title && author && link && size && format) {
-      bookList.push({
-        title,
-        author,
-        font,
-        id: link.match(/co_obra=(\d+)/)[1],
-        size,
-        sizeByBytes,
-        format,
+    if (!Object.values(newBook).every((value) => value.trim() === "")) {
+      Object.keys(newBook).forEach((key) => {
+        const typedKey = key as keyof IBook;
+        if (newBook[typedKey] === "") {
+          newBook[typedKey] = "informação indisponível";
+        }
       });
+      bookList.push(newBook);
     }
   });
 
@@ -106,6 +118,6 @@ export default async function getBooksInfo(
     "Vercel-CDN-Cache-Control",
     `public, s-maxage=${oneMonthInSeconds}`
   );
- 
+
   res.status(200).json(bookList);
 }
