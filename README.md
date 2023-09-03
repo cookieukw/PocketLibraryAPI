@@ -96,7 +96,7 @@
   
  ### Parâmetros 
   
- ####itemsSize 
+ #### itemsSize 
   
  - **parâmetro original: first** 
   
@@ -127,12 +127,104 @@
   
  > Descrição: Esse parâmetro corresponde ao tipo de mídia a ser pesquisada. Os valores enviados correspondem aos tipos abaixo: 
   
- | Valor | Tipo de Mídia | 
- | --- | --- | 
- | 5 | Imagem | 
- | 3 | Som | 
- | 2 | Texto | 
- | 6 | Vídeo | 
+Categoria| Número | Tipo de mídia
+-|-|-
+| Administração | 43 | Texto |
+| Agronomia | 69 | Texto |
+| Arquitetura | 89 | Texto |
+| Artes| 20 | Texto |
+| Astronomia | 68 | Texto |
+| Biologia Geral | 50 | Texto |
+| Ciência Política | 74 | Texto |
+| Ciência da Computação | 32 | Texto |
+| Ciência da Informação | 52 | Texto |
+| Ciências da Saúde | 48 | Texto |
+| Coleção Educadores | 133 | Texto |
+| Comunicação | 80 | Texto |
+| Conselho Nacional de Educação - CNE | 95 | Texto |
+| Defesa civil | 121 | Texto |
+| Direito| 21 | Texto |
+| Direitos humanos | 124 | Texto |
+| Economia | 73 | Texto |
+| Economia Doméstica | 39 | Texto |
+| Educação | 44 | Texto |
+| Educação - Trânsito | 40 | Texto |
+| Educação Física | 58 | Texto |
+| Engenharias | 59 | Texto |
+| Farmácia | 70 | Texto |
+| Filosofia | 54 | Texto |
+| Física | 61 | Texto |
+| Geociências | 97 | Texto |
+| Geografia | 82 | Texto |
+| História | 41 | Texto |
+| História Geral da África | 132 | Texto |
+| Legislação Educacional | 134 | Texto |
+| Literatura | 2 | Texto |
+| Literatura Infantil | 33 | Texto |
+| Literatura de Cordel | 35 | Texto |
+| Línguas | 81 | Texto |
+| Matemática | 67 | Texto |
+| Medicina | 65 | Texto |
+| Medicina Veterinária | 86 | Texto |
+| Meio Ambiente | 109 | Texto |
+| Meteorologia | 119 | Texto |
+| Multidisciplinar | 4 | Texto |
+| Música | 125 | Texto |
+| Psicologia | 30 | Texto |
+| Química | 66 | Texto |
+| Relações Internacionais | 129 | Texto |
+| Saúde Coletiva | 78 | Texto |
+| Serviço Social | 85 | Texto |
+| Sociologia | 62 | Texto |
+| Teologia | 17 | Texto |
+| Teses e Dissertações | 57 | Texto |
+| Trabalho | 122 | Texto |
+| Turismo | 123 | Texto |
+| Blues | 22 | Áudio |
+| Escola Brasil | 88 | Áudio |
+| Hinos | 5 | Áudio |
+| Jazz | 24 | Áudio |
+| Música Contemporânea | 18 | Áudio |
+| Música Erudita | 6 | Áudio |
+| Música Erudita Brasileira| 96 | Áudio |
+| Música Militar | 26 | Áudio |
+| Música Natalina | 7 | Áudio |
+| Música Regional | 27 | Áudio |
+| Pop Rock| 84 | Áudio |
+| Rádio Escola | 79 | Áudio |
+| Tome Ciência | 126| Áudio |
+| Educação Ambiental | 131| Vídeo |
+| FUNAG - Conferência | 12 | Vídeo |
+| FUNAG - Curso | 130| Vídeo |
+| PROFORMAÇÃO - Programa de Formação de Professores em Exercício| 120| Vídeo |
+| Passeios Virtuais | 28 | Vídeo |
+| Religião| 118| Vídeo |
+| TV Escola - Arte | 103| Vídeo |
+| TV Escola - Ciências | 104| Vídeo |
+| TV Escola - Com Ciência| 115| Vídeo |
+| TV Escola - Como fazer? A Escola | 116| Vídeo |
+| TV Escola - Educação Especial | 100| Vídeo |
+| TV Escola - Educação Física | 101| Vídeo |
+| TV Escola - Escola / Educação | 102| Vídeo |
+| TV Escola - Fazendo Escola | 114| Vídeo |
+| TV Escola - Geografia | 117| Vídeo |
+| TV Escola - História | 106| Vídeo |
+| TV Escola - Literatura| 108| Vídeo |
+| TV Escola - Língua Portuguesa | 107| Vídeo |
+| TV Escola - Matemática| 99 | Vídeo |
+| TV Escola - Pluralidade Cultural | 110| Vídeo |
+| TV Escola - Sala de Professor | 113| Vídeo |
+| TV Escola - Salto para o Futuro | 112| Vídeo |
+| TV Escola - Saúde | 111| Vídeo |
+| TV Escola - Ética | 105| Vídeo |
+| Fotografia | 19 | Imagem|
+| Gravura| 38 | Imagem|
+| Ilustração | 8 | Imagem|
+| Litografia | 56 | Imagem|
+| Mapa | 9 | Imagem|
+| Pintura (uso educacional e não-comercial)| 10 | Imagem|
+| Recortes| 36 | Imagem|
+| Satélite| 11 | Imagem|
   
  #### category 
   

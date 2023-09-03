@@ -50,9 +50,9 @@ export default async function getBooksInfo(
     filterBy: filterBy || null,
     order: order || null,
   };
-
+  console.log({ category });
   const queryUrl = `http://www.dominiopublico.gov.br/pesquisa/ResultadoPesquisaObraForm.do?first=${params.itemsSize}&skip=${params.skipItems}&ds_titulo=${params.title}&co_autor=${params.codeAuthor}&no_autor=${params.authorName}&co_categoria=${params.category}&pagina=${params.page}&select_action=Submit&co_midia=${params.media}&co_obra=${params.artwork}&co_idioma=${params.language}&colunaOrdenar=${params.filterBy}&ordem=${params.order}`;
-
+console.log({queryUrl})
   const response = await axios.get(queryUrl, {
     headers,
     responseType: "arraybuffer",
@@ -101,7 +101,7 @@ export default async function getBooksInfo(
     newBook.format =
       clear($(element).find("td:nth-child(6)").text().trim() ?? "") ?? "";
     const matchResult = newBook.link?.match(/co_obra=(\d+)/);
-newBook.bookId = matchResult ? matchResult[1] : "";
+    newBook.bookId = matchResult ? matchResult[1] : "";
 
     if (!Object.values(newBook).every((value) => value.trim() === "")) {
       Object.keys(newBook).forEach((key) => {
