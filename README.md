@@ -126,7 +126,20 @@
  - **parâmetro original: co_midia** 
   
  > Descrição: Esse parâmetro corresponde ao tipo de mídia a ser pesquisada. Os valores enviados correspondem aos tipos abaixo: 
+
+  | Valor | Tipo de Mídia | 
+ | --- | --- | 
+ | 5 | Imagem | 
+ | 3 | Som | 
+ | 2 | Texto | 
+ | 6 | Vídeo | 
   
+ #### category 
+  
+ - **parâmetro original: co_categoria** 
+  
+ > Descrição: Esse parâmetro corresponde à categoria da obra. Os valores enviados correspondem às categorias selecionadas e devem ser passados o tipo de mídia correto(tabela acima) para retornar valores:
+
 Categoria| Número | Tipo de mídia
 -|-|-
 | Administração | 43 | Texto |
@@ -225,23 +238,6 @@ Categoria| Número | Tipo de mídia
 | Pintura (uso educacional e não-comercial)| 10 | Imagem|
 | Recortes| 36 | Imagem|
 | Satélite| 11 | Imagem|
-  
- #### category 
-  
- - **parâmetro original: co_categoria** 
-  
- > Descrição: Esse parâmetro corresponde à categoria da obra. Os valores enviados correspondem às categorias selecionadas: 
-  
- | Valor | Categoria | 
- | --- | --- | 
- | 19 | Fotografia | 
- | 38 | Gravura | 
- | 8 | Ilustração | 
- | 56 | Litografia | 
- | 9 | Mapa | 
- | 10 | Pintura (uso educacional e não-comercial) | 
- | 36 | Recortes | 
- | 11 | Satélite | 
   
  #### codeAuthor 
   
