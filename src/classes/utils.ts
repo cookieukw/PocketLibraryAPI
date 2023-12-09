@@ -19,13 +19,13 @@ export default {
       MB: 1024 * 1024,
       GB: 1024 * 1024 * 1024,
     };
-
-    const [valueStr, unit] = sizeStr.split(" ");
+ 
+    const [valueStr, unit] = sizeStr.trim().toLocaleUpperCase().split(" ");
 
     const value = parseFloat(valueStr.replace(",", "."));
 
     if (!units[unit]) {
-      throw new Error("Unidade de tamanho desconhecida");
+      console.log("Unidade de tamanho desconhecida");
     }
 
     const bytesSize = Math.floor(value * units[unit]);
@@ -48,14 +48,14 @@ export default {
 
         .split(/\s/g)
         .filter((e) => String(e).trim())
-        .join("_")
+        .join(" ")
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
     );
   },
   translateKeys(data: Record<string, any>): Record<string, any> {
-    const translatedData = {};
+    let translatedData: any = {};
     for (const key in data) {
       if (keyMap.hasOwnProperty(key)) {
         translatedData[keyMap[key]] = data[key];

@@ -50,9 +50,8 @@ export default async function getBooksInfo(
     filterBy: filterBy || null,
     order: order || null,
   };
-  console.log({ category });
+
   const queryUrl = `http://www.dominiopublico.gov.br/pesquisa/ResultadoPesquisaObraForm.do?first=${params.itemsSize}&skip=${params.skipItems}&ds_titulo=${params.title}&co_autor=${params.codeAuthor}&no_autor=${params.authorName}&co_categoria=${params.category}&pagina=${params.page}&select_action=Submit&co_midia=${params.media}&co_obra=${params.artwork}&co_idioma=${params.language}&colunaOrdenar=${params.filterBy}&ordem=${params.order}`;
-console.log({queryUrl})
   const response = await axios.get(queryUrl, {
     headers,
     responseType: "arraybuffer",
@@ -91,8 +90,10 @@ console.log({queryUrl})
       clear($(element).find("td:nth-child(5)").text().trim() ?? "") ?? "";
 
     newBook.link =
-      clear($(element).find("td:nth-child(2) a").attr("href") ?? "") ?? "";
-
+      $(element).find("td:nth-child(2) a").attr("href")?.substring(3) ?? "";
+    newBook.link = newBook.link
+      ? "http://www.dominiopublico.gov.br/" + newBook.link
+      : "";
     newBook.size =
       clear($(element).find("td:nth-child(7)").text().trim() ?? "") ?? "";
 
