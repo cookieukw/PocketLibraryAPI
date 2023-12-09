@@ -1,3 +1,17 @@
+const keyMap: Record<string, string> = {
+  titulo: "title",
+  autor: "author",
+  categoria: "category",
+  idioma: "language",
+  instituicao_parceiro: "intitutionOrPartner",
+  instituicao_programa: "institutionOrProgram",
+  area_conhecimento: "knowledgeArea",
+  nivel: "level",
+  ano_da_tese: "thesisYear",
+  acessos: "accesses",
+  resumo: "abstract",
+};
+
 export default {
   convertToBytes(sizeStr: string): number {
     const units: { [key: string]: number } = {
@@ -19,7 +33,7 @@ export default {
     return bytesSize;
   },
   clear: (text: string | undefined) => {
-    if(!text) return null
+    if (!text) return null;
     return (
       text
         .trim()
@@ -31,12 +45,22 @@ export default {
         .replaceAll(/"/g, '\\"')
         //.replaceAll(/\(.*\)/g, '')
         // .replaceAll(/\[.*\]/g, '')
-        .replace("[cp]", "")
-        .replace("(cp)", "")
-        .replace("[", "")
+
         .split(/\s/g)
         .filter((e) => String(e).trim())
-        .join(" ")
+        .join("_")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
     );
+  },
+  translateKeys(data: Record<string, any>): Record<string, any> {
+    const translatedData = {};
+    for (const key in data) {
+      if (keyMap.hasOwnProperty(key)) {
+        translatedData[keyMap[key]] = data[key];
+      }
+    }
+    return translatedData;
   },
 };

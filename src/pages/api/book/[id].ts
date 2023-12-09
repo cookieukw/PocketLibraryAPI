@@ -3,20 +3,21 @@ import cheerio from "cheerio";
 import utils from "../../../classes/utils";
 import axios from "axios";
 import iconv from "iconv-lite";
+const l = console.log;
 
 interface BookInfo {
-  downloadUrl: string;
-  title: string;
-  author: string;
-  category: string;
-  language: string;
-  intitutionOrPartner: string;
-  institutionOrProgram: string;
-  knowledgeArea: string;
-  level: string;
-  thesisYear: string;
-  accesses: string;
-  abstract: string;
+  downloadUrl?: string;
+  title?: string;
+  author?: string;
+  category?: string;
+  language?: string;
+  intitutionOrPartner?: string;
+  institutionOrProgram?: string;
+  knowledgeArea?: string;
+  level?: string;
+  thesisYear?: string;
+  accesses?: string;
+  abstract?: string;
 }
 
 export default async function handler(
@@ -36,8 +37,11 @@ export default async function handler(
   const response = await axios.get(url);
 
   const decodedHtml = iconv.decode(response.data, "iso-8859-1");
-
+  for (let i = 0; i < 50; i++) {
+    l("\n");
+  }
   const $ = cheerio.load(decodedHtml);
+
   const bookInfo: BookInfo = {
     downloadUrl: "",
     title: "",
@@ -52,58 +56,62 @@ export default async function handler(
     accesses: "",
     abstract: "",
   };
-  const bookItems: any[] = [];
-  const comments = $(
+
+  const trashInfo: Record<string, any> = {};
+  const tables = $(
     "table[width='100%'][border='0'][cellspacing='0'][cellpadding='0']"
-  )
-    .eq(10)
-    .find("table")
-    .eq(1)
+  );
+
+  const tableInfo = $(tables).eq(10).find("table").eq(1);
+
+  $(tables)
+    .eq(9)
     .find("tr")
-    .each((_, element) => {
-      const item = $(element).find("td").eq(2);
-      bookItems.push(item);
-      console.log($(item).text());
+
+    .each((_, a: any) => {
+      l($(a).html());
+      const splitValue = $(a)
+        .text()
+        .split(":")
+        .map((item) => String(item).trim())
+        .filter((item) => String(item).trim());
+
+      l(
+        `
+      {"${utils.clear(splitValue[0])}": "${splitValue[1]}" }
+      `
+      );
+    });
+
+  $(tableInfo)
+    .find("tr")
+    .each((_, e: any) => {
+      trashInfo[`${utils.clear($(e).find(".detalhe1").text().trim())}`] = $(e)
+        .find(".detalhe2")
+        .text()
+        .trim();
     })
+    .last()
     .contents()
     .filter(function (this: any) {
       return this.nodeType === 8;
     })
-    .last();
-  /* .each((_, e: any) => {
-      // let tempElement = $(e)[0].nodeValue!.trim();
-      let tempElement = $(e).text().trim();
-      tempElement = $(tempElement);
-      tempElement = $(tempElement).find("a");
-      bookItems.push(tempElement);
-    });*/
-  comments.each((_, e: any) => {
-    let tempElement = e.nodeValue;
-    tempElement = $(tempElement).find("a");
+    .last()
+    .each((_, e: any) => {
+      let tempElement = e.nodeValue;
+      const tempUrl = $(tempElement).find("a").attr("href") ?? "";
+      bookInfo.downloadUrl = tempUrl
+        ? "http://www.dominiopublico.gov.br/download" + tempUrl
+        : "";
+    });
+  const bookResults = utils.translateKeys(trashInfo);
 
-    bookItems.push(tempElement);
+  Object.keys(bookInfo).forEach((key) => {
+    if (key == "downloadUrl") {
+      return;
+    }
+    bookInfo[key as keyof BookInfo] = bookResults[key as keyof BookInfo];
   });
-
-  bookItems.filter((a: any) => String(a).trim());
-
-  const tempUrl = $(bookItems[13]).attr("href") ??"";
-
-  bookInfo.downloadUrl = tempUrl
-    ? "http://www.dominiopublico.gov.br/download" + tempUrl
-    : "";
-
-  bookInfo.title = $(bookItems[0]).text()??"";
-
-  bookInfo.author = utils.clear($(bookItems[1]).text()??"")??"";
-  bookInfo.category = utils.clear($(bookItems[2]).text()??"")?.toLowerCase()??"";
-  bookInfo.language = utils.clear($(bookItems[3]).text()??"")?.toLowerCase()   ??"";
-  bookInfo.intitutionOrPartner = utils.clear($(bookItems[4]).text()??"")??"";
-  bookInfo.institutionOrProgram = utils.clear($(bookItems[5]).text()??"")??"";
-  bookInfo.knowledgeArea = utils.clear($(bookItems[6]).text()??"")??"";
-  bookInfo.level = utils.clear($(bookItems[7]).text()??"")??"";
-  bookInfo.thesisYear = utils.clear($(bookItems[8]).text()??"")??"";
-  bookInfo.accesses = utils.clear($(bookItems[9]).text()??"")??"";
-  bookInfo.abstract = utils.clear($(bookItems[10]).text()??  "")??"";
 
   if (Object.values(bookInfo).every((value) => value.trim() === "")) {
     return res.status(404).json({ error: "No data found for the given ID." });
