@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/api/:path*", "destination": "https://bpocket.vercel.app/:path*" }]
+  "routes": [
+    {
+      "src": "/api/books",
+      "methods": ["GET"],
+      "allow": ["https://localhost:5173"]
+    }
+  ]
 }
