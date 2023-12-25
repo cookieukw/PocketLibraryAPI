@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "handle": "cors"
+    },
+    {
+      "src": "/api/books",
+      "dest": "https://bpocket.vercel.app/api/books"
+    }
+  ]
+}
