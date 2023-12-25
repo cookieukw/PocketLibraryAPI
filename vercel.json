@@ -1,9 +1,0 @@
-{
-  "routes": [
-    {
-      "src": "/api/books",
-      "methods": ["GET"],
-      "allow": ["https://localhost:5173"]
-    }
-  ]
-}
