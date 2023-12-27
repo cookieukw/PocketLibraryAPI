@@ -243,19 +243,19 @@ Categoria| Número | Tipo de mídia
   
  - **parâmetro original: co_autor** 
   
- > Descrição: Esse parâmetro corresponde ao código do autor da obra. 
+ > Descrição: Esse parâmetro pesquisa pelo código doe um autor.
   
  #### authorName 
   
  - **parâmetro original: no_autor** 
   
- > Descrição: Esse parâmetro corresponde ao nome do autor da obra. 
+ > Descrição: Esse parâmetro pesquisa por nome de autor.
   
  #### title 
   
  - **parâmetro original: ds_titulo** 
   
- > Descrição: Esse parâmetro corresponde ao título da obra. 
+ > Descrição: Esse parâmetro pesquisa por um texto(títulos de obras).
   
  #### language 
   
