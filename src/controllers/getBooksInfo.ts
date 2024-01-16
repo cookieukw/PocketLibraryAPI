@@ -52,6 +52,7 @@ export default async function getBooksInfo(
   };
 
   const queryUrl = `http://www.dominiopublico.gov.br/pesquisa/ResultadoPesquisaObraForm.do?first=${params.itemsSize}&skip=${params.skipItems}&ds_titulo=${params.title}&co_autor=${params.codeAuthor}&no_autor=${params.authorName}&co_categoria=${params.category}&pagina=${params.page}&select_action=Submit&co_midia=${params.media}&co_obra=${params.artwork}&co_idioma=${params.language}&colunaOrdenar=${params.filterBy}&ordem=${params.order}`;
+  console.log({ queryUrl });
   const response = await axios.get(queryUrl, {
     headers,
     responseType: "arraybuffer",
@@ -80,15 +81,13 @@ export default async function getBooksInfo(
       format: "",
       bookId: "",
     };
+
     newBook.title =
       clear($(element).find("td:nth-child(3) a").text() ?? "") ?? "";
-
     newBook.author =
       clear($(element).find("td:nth-child(4)").text().trim() ?? "") ?? "";
-
     newBook.font =
       clear($(element).find("td:nth-child(5)").text().trim() ?? "") ?? "";
-
     newBook.link =
       $(element).find("td:nth-child(2) a").attr("href")?.substring(3) ?? "";
     newBook.link = newBook.link
@@ -96,21 +95,23 @@ export default async function getBooksInfo(
       : "";
     newBook.size =
       clear($(element).find("td:nth-child(7)").text().trim() ?? "") ?? "";
-
     newBook.sizeByBytes = convertToBytes(newBook.size ?? "").toString() ?? "";
-
     newBook.format =
       clear($(element).find("td:nth-child(6)").text().trim() ?? "") ?? "";
+
     const matchResult = newBook.link?.match(/co_obra=(\d+)/);
     newBook.bookId = matchResult ? matchResult[1] : "";
 
-    if (!Object.values(newBook).every((value) => value.trim() === "")) {
+    // Verifique se o título não está vazio antes de adicionar à lista
+    if (newBook.title.trim() !== "") {
+      // Certifique-se de que outros campos vazios recebam "informação indisponível"
       Object.keys(newBook).forEach((key) => {
         const typedKey = key as keyof IBook;
         if (newBook[typedKey] === "") {
           newBook[typedKey] = "informação indisponível";
         }
       });
+
       bookList.push(newBook);
     }
   });
