@@ -117,12 +117,12 @@ A API suporta diversos parâmetros de pesquisa para refinar os resultados:
 
 #### Tabela de Tipos de Mídia
 
-| Número | Tipo de Mídia |
+| Tipo de Mídia | Número |
 |-|-|
-| 5 | Imagem |
-| 3 | Som |
-| 2 | Texto |
-| 6 | Vídeo |
+| Imagem | 5 |
+| Som   | 3 |
+| Texto | 2 |
+| Vídeo | 6 |
 
 #### Tabela de Categorias
 
