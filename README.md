@@ -80,14 +80,14 @@ Obtém informações detalhadas sobre um livro específico com base no ID do liv
 
 Se você quiser acessar a URL de download sem problemas, passe alguns headers no request da URL.
  ```js
- const options = {
-headers: {
-'User-Agent': '<user_agent>',
-"Cookie":"JSESSIONID=<uma_id_aleatoria>",
-'Accept': '/',
-'Connection': 'keep-alive'
-}
-};
+ const options = {   
+   headers: {   
+     'User-Agent': '<user_agent>',   
+     "Cookie":"JSESSIONID=<uma_id_aleatoria>",  
+     'Accept': '/',  
+     'Connection': 'keep-alive'  
+   }   
+ };  
  ``` 
 ### Parâmetros de Pesquisa
 
@@ -109,10 +109,10 @@ A API suporta diversos parâmetros de pesquisa para refinar os resultados:
 | `title` | Pesquisa por um Texto  (títulos de obras). | null | string |
 
 >[!WARNING]
-> Ao usar as categorias, verifique se está passando o tipo de mídia certo dessa categoria em específico 
+> Ao usar as categorias, verifique se está passando o tipo de mídia certo dessa categoria em específico
 
 >[!CAUTION]
->Se o tipo de mídia é de Texto  mas a categoria passada for para Áudio, os valores retornados serão vazios
+>Se o tipo de mídia é de Texto  mas a categoria passada for para Áudio, a lista dos valores retornados será vazia
 
 
 #### Tabela de Tipos de Mídia
