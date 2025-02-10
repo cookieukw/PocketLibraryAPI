@@ -13,16 +13,32 @@ jobs:
       - name: Check Code
         uses: actions/checkout@v2
 
+   #   - name: Set Up Node.js Environment
+   #    uses: actions/setup-node@v2
+   #    with:
+   #      node-version: 18
+   
       - name: Set Up Node.js Environment
         uses: actions/setup-node@v2
         with:
           node-version: 18
+          cache: 'pnpm'  
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+        
+
+    #   - name: Install Dependencies
+    #   run: |
+    #     npm install
+    #     npx cap init
 
       - name: Install Dependencies
         run: |
-          npm install
-          npx cap init
-
+          pnpm install
+          pnpm exec cap init
+          
+          
       - name: Install Java
         uses: actions/setup-java@v1.4.3
         with:
@@ -53,14 +69,20 @@ jobs:
           fi
 
       - name: Build the React Application
-        run: npm run build
+        run: pnpm run build
 
+      #- name: Sync files
+       # run: npx cap sync
+       
       - name: Sync files
-        run: npx cap sync
-
+        run: pnpm exec cap sync
+        
+     #- name: Verify Capacitor Platform
+       # run: npx cap ls
+       
       - name: Verify Capacitor Platform
-        run: npx cap ls
-
+        run: pnpm exec cap ls
+        
       - name: Install apksigner
         run: sudo apt update && sudo apt install -y apksigner
 
