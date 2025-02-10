@@ -27,7 +27,9 @@ jobs:
           
       - name: Install dependencies
         run: |
+          pnpm approve-builds
           pnpm install
+          
           npx cap init
 
       - name: Setup Java
