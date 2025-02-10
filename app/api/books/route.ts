@@ -1,5 +1,5 @@
 import axios from "axios";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import iconv from "iconv-lite";
 import { NextResponse } from "next/server";
 
