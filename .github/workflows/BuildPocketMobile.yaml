@@ -24,9 +24,7 @@ jobs:
       - name: Install pnpm
         run: |
           npm install -g pnpm@latest
-          echo "PNPM_HOME=$(pnpm store path)" >> $GITHUB_ENV
-          echo "$(pnpm store path)" >> $GITHUB_PATH
-
+          
       - name: Install dependencies
         run: |
           pnpm install
