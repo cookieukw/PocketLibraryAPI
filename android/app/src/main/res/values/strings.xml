@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PocketLibrary</string>
+    <string name="title_activity_main">PocketLibrary</string>
+    <string name="package_name">com.cookie.bpocket</string>
+    <string name="custom_url_scheme">com.cookie.bpocket</string>
+    <string name="admob_app_id">0</string>
+</resources>

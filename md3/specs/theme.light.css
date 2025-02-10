@@ -1,0 +1,105 @@
+body,
+body.light {
+  --md-sys-color-primary: var(--md-sys-color-primary-light);
+  --md-sys-color-primary-rgb: var(--md-sys-color-primary-light-rgb);
+  --md-sys-color-on-primary: var(--md-sys-color-on-primary-light);
+  --md-sys-color-on-primary-rgb: var(--md-sys-color-on-primary-light-rgb);
+  --md-sys-color-primary-container: var(--md-sys-color-primary-container-light);
+  --md-sys-color-primary-container-rgb: var(--md-sys-color-primary-container-light-rgb);
+  --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-light);
+  --md-sys-color-on-primary-container-rgb: var(--md-sys-color-on-primary-container-light-rgb);
+  
+  --md-sys-color-secondary: var(--md-sys-color-secondary-light);
+  --md-sys-color-secondary-rgb: var(--md-sys-color-secondary-light-rgb);
+  --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-light);
+  --md-sys-color-on-secondary-rgb: var(--md-sys-color-on-secondary-light-rgb);
+  --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-light);
+  --md-sys-color-secondary-container-rgb: var(--md-sys-color-secondary-container-light-rgb);
+  --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-light);
+  --md-sys-color-on-secondary-container-rgb: var(--md-sys-color-on-secondary-container-light-rgb);
+  
+  --md-sys-color-tertiary: var(--md-sys-color-tertiary-light);
+  --md-sys-color-tertiary-rgb: var(--md-sys-color-tertiary-light-rgb);
+  --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-light);
+  --md-sys-color-on-tertiary-rgb: var(--md-sys-color-on-tertiary-light-rgb);
+  --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-light);
+  --md-sys-color-tertiary-container-rgb: var(--md-sys-color-tertiary-container-light-rgb);
+  --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-light);
+  --md-sys-color-on-tertiary-container-rgb: var(--md-sys-color-on-tertiary-container-light-rgb);
+  
+  --md-sys-color-error: var(--md-sys-color-error-light);
+  --md-sys-color-error-rgb: var(--md-sys-color-error-light-rgb);
+  --md-sys-color-on-error: var(--md-sys-color-on-error-light);
+  --md-sys-color-on-error-rgb: var(--md-sys-color-on-error-light-rgb);
+  --md-sys-color-error-container: var(--md-sys-color-error-container-light);
+  --md-sys-color-error-container-rgb: var(--md-sys-color-error-container-light-rgb);
+  --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-light);
+  --md-sys-color-on-error-container-rgb: var(--md-sys-color-on-error-container-light-rgb);
+  
+  --md-sys-color-background: var(--md-sys-color-background-light);
+  --md-sys-color-background-rgb: var(--md-sys-color-background-light-rgb);
+  --md-sys-color-on-background: var(--md-sys-color-on-background-light);
+  --md-sys-color-on-background-rgb: var(--md-sys-color-on-background-light-rgb);
+  
+  --md-sys-color-on-surface: var(--md-sys-color-on-surface-light);
+  --md-sys-color-on-surface-rgb: var(--md-sys-color-on-surface-light-rgb);
+  --md-sys-color-surface: var(--md-sys-color-surface-light);
+  --md-sys-color-surface-rgb: var(--md-sys-color-surface-light-rgb);
+  --md-sys-color-surface-dim: var(--md-sys-color-surface-dim-light);
+  --md-sys-color-surface-dim-rgb: var(--md-sys-color-surface-dim-light-rgb);
+  --md-sys-color-surface-bright: var(--md-sys-color-surface-bright-light);
+  --md-sys-color-surface-bright-rgb: var(--md-sys-color-surface-bright-light-rgb);
+  
+  --md-sys-color-surface-container-lowest: var(--md-sys-color-surface-container-lowest-light);
+  --md-sys-color-surface-container-lowest-rgb: var(--md-sys-color-surface-container-lowest-light-rgb);
+  --md-sys-color-surface-container-low: var(--md-sys-color-surface-container-low-light);
+  --md-sys-color-surface-container-low-rgb: var(--md-sys-color-surface-container-low-light-rgb);
+  --md-sys-color-surface-container: var(--md-sys-color-surface-container-light);
+  --md-sys-color-surface-container-rgb: var(--md-sys-color-surface-container-light-rgb);
+  --md-sys-color-surface-container-high: var(--md-sys-color-surface-container-high-light);
+  --md-sys-color-surface-container-high-rgb: var(--md-sys-color-surface-container-high-light-rgb);
+  --md-sys-color-surface-container-highest: var(--md-sys-color-surface-container-highest-light);
+  --md-sys-color-surface-container-highest-rgb: var(--md-sys-color-surface-container-highest-light-rgb);
+  
+  --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-light);
+  --md-sys-color-on-surface-variant-rgb: var(--md-sys-color-on-surface-variant-light-rgb);
+  --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-light);
+  --md-sys-color-surface-variant-rgb: var(--md-sys-color-surface-variant-light-rgb);
+  
+  --md-sys-color-outline: var(--md-sys-color-outline-light);
+  --md-sys-color-outline-rgb: var(--md-sys-color-outline-light-rgb);
+  --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-light);
+  --md-sys-color-outline-variant-rgb: var(--md-sys-color-outline-variant-light-rgb);
+  
+  --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-light);
+  --md-sys-color-inverse-on-surface-rgb: var(--md-sys-color-inverse-on-surface-light-rgb);
+  --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-light);
+  --md-sys-color-inverse-surface-rgb: var(--md-sys-color-inverse-surface-light-rgb);
+  --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-light);
+  --md-sys-color-inverse-primary-rgb: var(--md-sys-color-inverse-primary-light-rgb);
+  
+  --md-sys-color-shadow: var(--md-sys-color-shadow-light);
+  --md-sys-color-shadow-rgb: var(--md-sys-color-shadow-light-rgb);
+  --md-sys-color-surface-tint: var(--md-sys-color-surface-tint-light);
+  --md-sys-color-surface-tint-rgb: var(--md-sys-color-surface-tint-light-rgb);
+  --md-sys-color-scrim: var(--md-sys-color-scrim-light);
+  --md-sys-color-scrim-rgb: var(--md-sys-color-scrim-light-rgb);
+  
+  --md-custom-color-success: var(--md-custom-color-success-light);
+  --md-custom-color-success-rgb: var(--md-custom-color-success-light-rgb);
+  --md-custom-color-on-success: var(--md-custom-color-on-success-light);
+  --md-custom-color-on-success-rgb: var(--md-custom-color-on-success-light-rgb);
+  --md-custom-color-success-container: var(--md-custom-color-success-container-light);
+  --md-custom-color-success-container-rgb: var(--md-custom-color-success-container-light-rgb);
+  --md-custom-color-on-success-container: var(--md-custom-color-on-success-container-light);
+  --md-custom-color-on-success-container-rgb: var(--md-custom-color-on-success-container-light-rgb);
+  
+  --md-custom-color-warning: var(--md-custom-color-warning-light);
+  --md-custom-color-warning-rgb: var(--md-custom-color-warning-light-rgb);
+  --md-custom-color-on-warning: var(--md-custom-color-on-warning-light);
+  --md-custom-color-on-warning-rgb: var(--md-custom-color-on-warning-light-rgb);
+  --md-custom-color-warning-container: var(--md-custom-color-warning-container-light);
+  --md-custom-color-warning-container-rgb: var(--md-custom-color-warning-container-light-rgb);
+  --md-custom-color-on-warning-container: var(--md-custom-color-on-warning-container-light);
+  --md-custom-color-on-warning-container-rgb: var(--md-custom-color-on-warning-container-light-rgb);
+}
