@@ -27,9 +27,10 @@ jobs:
           
       - name: Install dependencies
         run: |
-         pnpm approve-builds
          pnpm install --frozen-lockfile
-         npx cap init
+         
+
+         
       - name: Install Capacitor CLI
         run: |
          pnpm add -g @capacitor/cli
