@@ -19,26 +19,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-        
 
       - name: Install pnpm
         run: |
           npm install -g pnpm@latest
-          
+
+      - name: Setup global bin directory for pnpm
+        run: pnpm config set global-bin-dir ~/.pnpm-global
+
       - name: Install dependencies
         run: |
-         pnpm install --frozen-lockfile
-         
+          pnpm install --frozen-lockfile
 
-         
       - name: Install Capacitor CLI
         run: |
-         pnpm add -g @capacitor/cli
+          pnpm add -g @capacitor/cli
 
       - name: Initialize Capacitor
         run: |
-         npx cap init
-      
+          npx cap init
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
