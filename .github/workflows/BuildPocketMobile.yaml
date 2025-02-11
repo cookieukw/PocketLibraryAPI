@@ -24,8 +24,10 @@ jobs:
         run: |
           npm install -g pnpm@latest
 
-      - name: Setup global bin directory for pnpm
-        run: pnpm config set global-bin-dir ~/.pnpm-global
+      - name: Setup pnpm global bin directory and add to PATH
+        run: |
+          pnpm config set global-bin-dir ~/.pnpm-global
+          echo "::add-path::$(pnpm config get global-bin-dir)"
 
       - name: Install dependencies
         run: |
