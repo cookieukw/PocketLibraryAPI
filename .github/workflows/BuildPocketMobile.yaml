@@ -27,11 +27,17 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pnpm approve-builds
-          pnpm install
-          
-          npx cap init
+         pnpm approve-builds
+         pnpm install --frozen-lockfile
+         npx cap init
+      - name: Install Capacitor CLI
+        run: |
+         pnpm add -g @capacitor/cli
 
+      - name: Initialize Capacitor
+        run: |
+         npx cap init
+      
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
