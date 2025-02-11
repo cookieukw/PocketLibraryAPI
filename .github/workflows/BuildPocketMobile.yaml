@@ -1,90 +1,89 @@
-name: BuildPocketMobile
+name: Build
 
 on:
-  push:
-    branches:
-      - main
   release:
-    types: [created, edited]
+    types:
+      - created
 
 jobs:
-  android-build:
+  setup-capacitor-environment:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Check out code
+        uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v2
         with:
           node-version: 20
 
       - name: Install pnpm
-        run: |
-          npm install -g pnpm@latest
+        run: npm install -g pnpm
 
-      - name: Setup pnpm global bin directory and add to PATH
+      - name: Install dependencies and initialize Capacitor
         run: |
-          pnpm config set global-bin-dir ~/.pnpm-global
-          echo "::add-path::$(pnpm config get global-bin-dir)"
+          pnpm install
+          pnpm exec cap init android
 
-      - name: Install dependencies
-        run: |
-          pnpm install --frozen-lockfile
-
-      - name: Install Capacitor CLI
-        run: |
-          pnpm add -g @capacitor/cli
-
-      - name: Initialize Capacitor
-        run: |
-          npx cap init
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      - name: Install Java JDK
+        uses: actions/setup-java@v2
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "adopt"
+          java-version: "17"
 
-      - name: Setup Gradle
+      - name: Print Java version
+        run: java -version
+
+      - name: Install Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 8.5
+          gradle-version: 7.3
 
-      - name: Decode Keystore
+      - name: Decode Keystore from Base64
+        run: echo "${{ secrets.COOKIE_KEY }}" | base64 --decode > ${{ github.workspace }}/cookie.keystore
+
+      - name: Find debug keystore
         run: |
-          echo "${{ secrets.COOKIE_KEY }}" | base64 --decode > ${{ github.workspace }}/cookie.keystore
-          chmod 644 ${{ github.workspace }}/cookie.keystore
+          debug_keystore_path="${{ github.workspace }}/cookie.keystore"
+          if [ -f "$debug_keystore_path" ]; then
+            echo "Debug Keystore: $debug_keystore_path"
+          else
+            echo "Debug Keystore not found."
+          fi
 
-      - name: Build React App
-        run: npx run build
+      - name: Give execute permission to gradlew
+        run: chmod +x ./android/gradlew
 
-      - name: Sync Capacitor
-        run: npx cap sync
+      - name: Build the React application
+        run: pnpm run build
 
-      - name: Build Android Packages
+      - name: Sync files with Capacitor
+        run: pnpm exec cap sync
+
+      - name: Verify Capacitor platform
+        run: pnpm exec cap ls
+
+      - name: Install apksigner
+        run: sudo apt update && sudo apt install -y apksigner
+
+      - name: Build Android APK
         env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/cookie.keystore
-          ANDROID_KEYSTORE_PASSWORD: cookieukw
-          ANDROID_KEY_ALIAS: cookieukw
-          ANDROID_KEY_PASSWORD: cookieukw
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           cd android
-          ./gradlew clean
           ./gradlew bundleRelease
           ./gradlew assembleRelease
-          mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/app-$(date +%Y%m%d%H%M).aab
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/app-$(date +%Y%m%d%H%M).apk
 
-      - name: Upload Release Assets
+      - name: Create draft release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: latest
-          update: true
-          generate_release_notes: true
+          draft: true
           files: |
-            android/app/build/outputs/bundle/release/*.aab
-            android/app/build/outputs/apk/release/*.apk
+            ${{ github.workspace }}/android/app/build/outputs/bundle/release/*.aab
+            ${{ github.workspace }}/android/app/build/outputs/apk/release/*.apk
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.POCKET }}
