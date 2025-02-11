@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies and initialize Capacitor
         run: |
           pnpm install
-          pnpm exec cap init android
+          npx cap init android
 
       - name: Install Java JDK
         uses: actions/setup-java@v2
