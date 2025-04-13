@@ -103,7 +103,7 @@ const BookInfo = () => {
             try {
                 const [apiResponse] = await Promise.all([
                     axios.get<IBook>(
-                        `https://bpocket.vercel.app/api/book/${bookId}`,
+                        `https://bpocket.vercel.app/api/ebook/${bookId}`,
                         { signal }
                     ),
                     database.favorites
