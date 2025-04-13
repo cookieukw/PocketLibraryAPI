@@ -112,10 +112,10 @@ export const clear = (text: string | undefined) => {
     );
 };
 
-export const translateKeys: Record<string, any> = (
+export const translateKeys = (
     data: Record<string, any>
-) => {
-    let translatedData: any = {};
+): Record<string, any> => {
+    let translatedData: Record<string, any> = {};
     for (const key in data) {
         if (keyMap.hasOwnProperty(key)) {
             translatedData[keyMap[key]] = data[key];
