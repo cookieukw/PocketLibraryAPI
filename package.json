@@ -10,8 +10,10 @@
         "fstcmmt": "git add . && git commit -m '#' && git push origin main"
     },
     "dependencies": {
+        "@capacitor-community/http": "^1.4.1",
         "@capacitor/android": "^7.0.1",
         "@capacitor/core": "^7.0.1",
+        "@capacitor/filesystem": "^7.1.2",
         "@capacitor/splash-screen": "^7.0.0",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
