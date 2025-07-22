@@ -28,7 +28,7 @@ import {
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { getIcon, toCamelCase } from "@/classes/util";
+import { getIcon, toCamelCase } from "@/classes/utils";
 import animation404 from "@/lottie/404.json";
 import DetailItem from "@/components/DetailItem";
 
