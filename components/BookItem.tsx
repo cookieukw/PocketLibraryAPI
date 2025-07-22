@@ -29,7 +29,7 @@ import {
     Link as LinkIcon,
     Info
 } from "@mui/icons-material";
-import { getIcon, toCamelCase } from "@/classes/util";
+import { getIcon, toCamelCase } from "@/classes/utils";
 import database from "@/classes/database";
 import { useReward } from "react-rewards";
 import hearthEmojis from "@/classes/hearthEmojis";
