@@ -22,6 +22,7 @@
         "cheerio": "^1.0.0",
         "dexie": "^4.0.11",
         "framer-motion": "^12.4.1",
+        "html-entities": "^2.6.0",
         "iconv-lite": "^0.6.3",
         "ionicons": "^7.4.0",
         "lodash": "^4.17.21",
