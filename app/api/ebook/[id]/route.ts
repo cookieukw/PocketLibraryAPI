@@ -99,13 +99,14 @@ export async function GET(
 
       .last()
       .contents()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter(function (this: any) {
         return this.nodeType === 8;
       })
       .last()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .each((_, e: any) => {
-        let tempElement = e.nodeValue;
-        const tempUrl = $(tempElement).find("a").attr("href") ?? "";
+        const tempUrl = $(e.nodeValue).find("a").attr("href") ?? "";
         downloadUrl = tempUrl
           ? "http://www.dominiopublico.gov.br/download" + tempUrl
           : "";
@@ -142,24 +143,31 @@ export async function GET(
     };
 
     return NextResponse.json(bookInfo, { status: 200, headers });
-  } catch (err: any) {
-    console.error("Erro na rota /api/ebook/[id]:", err);
+  } catch (err: unknown) {
+  console.error("Erro na rota /api/ebook/[id]:", err);
 
-    // Tratamento de erro aprimorado para Axios
+    // Tratamento de erro para Axios
     if (axios.isAxiosError(err)) {
-      return NextResponse.json(
-        {
-          error: "Erro ao se comunicar com a fonte de dados.",
-          message: err.message,
-        },
-        { status: err.response?.status || 500, headers: corsHeaders }
-      );
+        return NextResponse.json(
+          { 
+            error: "Erro ao se comunicar com a fonte de dados.", 
+            message: err.message 
+          },
+          { status: err.response?.status || 500, headers: corsHeaders }
+        );
+    }
+
+    // CORREÇÃO: Para outros tipos de erro, verificamos se é uma instância de Error
+    // para acessar a propriedade 'message' com segurança.
+    let message = "Ocorreu um erro inesperado.";
+    if (err instanceof Error) {
+        message = err.message;
     }
 
     return NextResponse.json(
-      {
-        error: "Erro interno do servidor.",
-        message: err.message,
+      { 
+        error: "Erro interno do servidor.", 
+        message: message // Usamos a variável segura 'message' aqui
       },
       { status: 500, headers: corsHeaders }
     );
