@@ -17,7 +17,7 @@ interface BookInfo {
   author: string;
   category: string;
   language: string;
-  intitutionOrPartner: string;
+  institutionOrPartner: string;
   institutionOrProgram: string;
   knowledgeArea: string;
   level: string;
@@ -118,7 +118,7 @@ export async function GET(
     // --- Montagem do Objeto Final ---
 
     const translatedData = translateKeys(rawBookData);
-    const unavailable = "informação indisponível";
+    const unavailable = null;
 
     const bookInfo: BookInfo = {
       downloadUrl: decode(downloadUrl) || unavailable,
@@ -126,7 +126,7 @@ export async function GET(
       author: decode(translatedData.author) || unavailable,
       category: decode(translatedData.category) || unavailable,
       language: decode(translatedData.language) || unavailable,
-      intitutionOrPartner:
+      institutionOrPartner:
         decode(translatedData.intitutionOrPartner) || unavailable,
       institutionOrProgram:
         decode(translatedData.institutionOrProgram) || unavailable,
