@@ -1,153 +1,164 @@
+// api/books/route.ts
+import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import iconv from "iconv-lite";
-import { NextResponse } from "next/server";
+import { clear, convertToBytes } from "@/classes/utils";
 
-import headersConfig from "@/classes/headers";
+// --- Tipos e Constantes ---
+
+interface IBook {
+  bookId: string;
+  title: string;
+  author: string;
+  font: string;
+  format: string;
+  size: string;
+  sizeInBytes: number;
+  detailsLink: string;
+}
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers":
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+};
+
+const UNAVAILABLE_TEXT = "informação indisponível";
+
+// --- Lógica da Rota ---
+
+export async function GET(request: NextRequest) {
+  try {
+    // 1. Extração e construção segura dos parâmetros de busca
+    const searchParams = request.nextUrl.searchParams;
+    const params = new URLSearchParams({
+      first: searchParams.get("itemsSize") || "10",
+      skip: searchParams.get("skipItems") || "0",
+      ds_titulo: searchParams.get("title") || "",
+      no_autor: searchParams.get("authorName") || "",
+      co_categoria: searchParams.get("category") || "",
+      pagina: searchParams.get("page") || "1",
+      co_midia: searchParams.get("media") || "2",
+      co_idioma: searchParams.get("language") || "1",
+      select_action: "Submit",
+    });
+    const queryUrl = `http://www.dominiopublico.gov.br/pesquisa/ResultadoPesquisaObraForm.do?${params.toString()}`;
+
+    // 2. Requisição com Axios, tratando a resposta como buffer para decodificação correta
+    const response = await axios.get(queryUrl, {
+      responseType: "arraybuffer",
+      timeout: 20000,
+    });
+    const decodedHtml = iconv.decode(response.data, "iso-8859-1");
+    const $ = cheerio.load(decodedHtml);
+
+    // --- Scraping Inteligente ---
+    const table = $("#res");
+    const bookList: IBook[] = [];
+
+    // Mapeia os cabeçalhos para seus índices de coluna. Isso torna o scraper robusto.
+    const headerMap: { [key: string]: number } = {};
+    table.find("thead th").each((index, element) => {
+      const headerText = $(element).text().trim().toLowerCase();
+      if (headerText.includes("título")) headerMap["title"] = index;
+      if (headerText.includes("autor")) headerMap["author"] = index;
+      if (headerText.includes("fonte")) headerMap["font"] = index;
+      if (headerText.includes("formato")) headerMap["format"] = index;
+      if (headerText.includes("tamanho")) headerMap["size"] = index;
+      if (headerText.includes("download")) headerMap["download"] = index;
+    });
+
+    // Itera sobre as linhas da tabela para extrair os dados de cada livro
+    table.find("tbody tr").each((_, element) => {
+      const $row = $(element);
+
+      // Função auxiliar para obter texto da célula pelo nome do cabeçalho
+      const getCellText = (headerName: keyof typeof headerMap) => {
+        const index = headerMap[headerName];
+        return index !== undefined
+          ? clear($row.find(`td:nth-child(${index + 1})`).text())
+          : UNAVAILABLE_TEXT;
+      };
+
+      // CORREÇÃO: Verifica se o índice da coluna existe antes de usá-lo no seletor.
+      const titleIndex = headerMap["title"];
+      if (titleIndex === undefined) {
+        return; // Pula a linha se a coluna de título não for encontrada.
+      }
+
+      const title = clear($row.find(`td:nth-child(${titleIndex + 1})`).text());
+      if (!title) {
+        return; // Pula linhas inválidas ou de cabeçalho repetido
+      }
+
+   
+      const detailsLink =
+        "http://www.dominiopublico.gov.br/" +
+        ($(element).find("td:nth-child(2) a").attr("href")?.substring(3) ??
+          UNAVAILABLE_TEXT);
+
+      const bookIdMatch = detailsLink.match(/co_obra=(\d+)/);
+
+  
 
 
-import { clear, convertToBytes } from "@/classes/util";
+      const size =
+        clear($(element).find("td:nth-child(7)").text().trim() ?? "") ?? "";
 
+      bookList.push({
+        bookId: bookIdMatch ? bookIdMatch[1] : UNAVAILABLE_TEXT,
+        title,
+        author: getCellText("author"),
+        font: getCellText("font"),
+        format: getCellText("format"),
+        size,
+        sizeInBytes: convertToBytes(size),
+   
+        detailsLink,
+      });
+    });
 
+    // Extrai o número total de resultados para facilitar a paginação no frontend
+    const totalText = $(".detalhe_total").text(); // "1 a 10 de 4503 itens"
+    const totalMatch = totalText.match(/de\s*([\d\.]+)/);
+    const totalResults = totalMatch
+      ? parseInt(totalMatch[1].replace(/\./g, ""), 10)
+      : 0;
 
-export async function GET(request: Request) {
-    // Definindo os cabeçalhos CORS e de cache para a resposta
-    const corsHeaders = new Headers();
-    corsHeaders.set("Access-Control-Allow-Origin", "*");
-    corsHeaders.set(
-        "Access-Control-Allow-Methods",
-        "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+    // 3. Retorna uma resposta JSON estruturada e correta
+    const cacheSeconds = 60 * 60; // 1 hora de cache
+    const headers = {
+      ...CORS_HEADERS,
+      "Cache-Control": `public, s-maxage=${cacheSeconds}, stale-while-revalidate`,
+    };
+
+    return NextResponse.json(
+      {
+        total: totalResults,
+        books: bookList,
+      },
+      { status: 200, headers }
     );
-    corsHeaders.set(
-        "Access-Control-Allow-Headers",
-        "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-    );
-
-    // Extrai os parâmetros da query string da URL
-    const { searchParams } = new URL(request.url);
-    const itemsSize = Number(searchParams.get("itemsSize")) || 10;
-    const skipItems = Number(searchParams.get("skipItems")) || 0;
-    const title = searchParams.get("title") || "";
-    const authorName = searchParams.get("authorName") || "";
-    const codeAuthor = searchParams.get("codeAuthor") || "";
-    const category = searchParams.get("category") || "";
-    const page = Number(searchParams.get("page")) || 2;
-    const media = Number(searchParams.get("media")) || 2;
-    const artwork = searchParams.get("artwork") || "";
-    const language = Number(searchParams.get("language")) || 1;
-    const filterBy = searchParams.get("filterBy") || "";
-    const order = searchParams.get("order") || "";
-
-    // Constrói a URL de consulta para o serviço externo
-    const queryUrl = `http://www.dominiopublico.gov.br/pesquisa/ResultadoPesquisaObraForm.do?first=${itemsSize}&skip=${skipItems}&ds_titulo=${title}&co_autor=${codeAuthor}&no_autor=${authorName}&co_categoria=${category}&pagina=${page}&select_action=Submit&co_midia=${media}&co_obra=${artwork}&co_idioma=${language}&colunaOrdenar=${filterBy}&ordem=${order}`;
-    //console.log({ queryUrl });
-
-    try {
-        // Faz a requisição usando axios (usando headersConfig, que você pode customizar conforme necessário)
-        const response = await axios.get(queryUrl, {
-            headers: headersConfig,
-            responseType: "arraybuffer"
-        });
-
-        // Converte o HTML recebido (em iso-8859-1) para UTF-8
-        const decodedHtml = iconv.decode(response.data, "iso-8859-1");
-
-        // Carrega o HTML com cheerio para facilitar a extração dos dados
-        const $ = cheerio.load(decodedHtml, {
-            
-            xmlMode: true
-        });
-
-        // Define a interface para cada livro
-        interface IBook {
-            title: string;
-            author: string;
-            font: string;
-            link: string;
-            size: string;
-            sizeByBytes: string;
-            format: string;
-            bookId: string;
-        }
-
-        const bookList: IBook[] = [];
-        const table = $("#res").find("tbody");
-        const books = $(table).find("tr");
-
-        // Percorre cada linha da tabela e extrai os dados do livro
-        books.each((index, element) => {
-            const newBook: IBook = {
-                title: "",
-                author: "",
-                font: "",
-                link: "",
-                size: "",
-                sizeByBytes: "",
-                format: "",
-                bookId: ""
-            };
-
-            newBook.title =
-                clear($(element).find("td:nth-child(3) a").text() ?? "") ?? "";
-            newBook.author =
-                clear($(element).find("td:nth-child(4)").text().trim() ?? "") ??
-                "";
-            newBook.font =
-                clear($(element).find("td:nth-child(5)").text().trim() ?? "") ??
-                "";
-            newBook.link =
-                $(element)
-                    .find("td:nth-child(2) a")
-                    .attr("href")
-                    ?.substring(3) ?? "";
-            newBook.link = newBook.link
-                ? "http://www.dominiopublico.gov.br/" + newBook.link
-                : "";
-            newBook.size =
-                clear($(element).find("td:nth-child(7)").text().trim() ?? "") ??
-                "";
-            newBook.sizeByBytes =
-                convertToBytes(newBook.size ?? "").toString() ?? "";
-            newBook.format =
-                clear($(element).find("td:nth-child(6)").text().trim() ?? "") ??
-                "";
-            const matchResult = newBook.link?.match(/co_obra=(\d+)/);
-            newBook.bookId = matchResult ? matchResult[1] : "";
-
-            // Só adiciona à lista se o título não estiver vazio
-            if (newBook.title.trim() !== "") {
-                // Se algum campo estiver vazio, atribui "informação indisponível"
-                Object.keys(newBook).forEach(key => {
-                    const typedKey = key as keyof IBook;
-                    if (newBook[typedKey] === "") {
-                        newBook[typedKey] = "informação indisponível";
-                    }
-                });
-                bookList.push(newBook);
-            }
-        });
-
-        // Define cabeçalhos de cache para um mês
-        const oneMonthInSeconds = 30 * 24 * 60 * 60;
-        corsHeaders.set("Cache-Control", `max-age=${oneMonthInSeconds}`);
-        corsHeaders.set(
-            "CDN-Cache-Control",
-            `public, s-maxage=${oneMonthInSeconds}`
-        );
-        corsHeaders.set(
-            "Vercel-CDN-Cache-Control",
-            `public, s-maxage=${oneMonthInSeconds}`
-        );
-
-        return new NextResponse(JSON.stringify(bookList), {
-            headers: corsHeaders,
-            status: 200
-        });
-    } catch (error) {
-        console.error(error);
-        return new NextResponse(
-            JSON.stringify({ error: "Internal Server Error" }),
-            { status: 500, headers: corsHeaders }
-        );
+  } catch (error) {
+    console.error("Erro na rota /api/books:", error);
+    if (axios.isAxiosError(error)) {
+      return NextResponse.json(
+        {
+          error: "Erro ao se comunicar com a fonte de dados.",
+          message: error.message,
+        },
+        { status: error.response?.status || 500, headers: CORS_HEADERS }
+      );
     }
+    return NextResponse.json(
+      { error: "Erro interno do servidor." },
+      { status: 500, headers: CORS_HEADERS }
+    );
+  }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }
