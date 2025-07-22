@@ -21,14 +21,7 @@
         ],
         "baseUrl": ".",
         "paths": {
-            "@/*": ["./"],
-            "@/components/*": ["./components/*"],
-            "@/pages/*": ["./pages/*"],
-            "@/classes/*": ["./classes/*"],
-            "@/lottie/*": ["./lottie/*"],
-            "@/md3/*": ["./md3/*"],
-            "@/data/*": ["./data/*"],
-            "@/stores/*": ["./stores/*"]
+            "@/*": ["./*"],
         }
     },
     "include": [
