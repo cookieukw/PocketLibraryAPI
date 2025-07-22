@@ -6,9 +6,6 @@ import axios from "axios"; // Importando axios para requisições HTTP
 import { decode } from "html-entities";
 import { clear, translateKeys } from "@/classes/utils";
 
-
-
-
 // --- Tipos e Constantes ---
 
 interface BookInfo {
