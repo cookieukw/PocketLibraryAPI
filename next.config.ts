@@ -7,11 +7,11 @@ const nextConfig: NextConfig = {
   // Optional: Prevent automatic `/me` -> `/me/`, instead preserve `href`
   //skipTrailingSlashRedirect: true,
 
-  distDir: "build",
+
   images: {
     unoptimized: true,
   },
-  //output: 'export',
+  output: 'export',
 };
 
 export default nextConfig;
