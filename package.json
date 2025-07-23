@@ -17,7 +17,7 @@
         "@capacitor/splash-screen": "^7.0.0",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
-        "@ionic/react": "^8.4.3",
+        "@ionic/react": "^8.6.5",
         "@mui/icons-material": "^6.4.3",
         "@mui/material": "^6.4.3",
         "@radix-ui/react-accordion": "^1.2.11",
