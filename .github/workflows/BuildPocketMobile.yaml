@@ -1,5 +1,7 @@
-name: Build
+# Nome do Workflow
+name: Build and Release Android App
 
+# Gatilhos: executa em push para a branch 'main' ou na criação/edição de uma release
 on:
   push:
     branches:
@@ -8,84 +10,107 @@ on:
     types: [created, edited]
 
 jobs:
-  setup-capacitor-environment:
+  # Nome do Job: descreve o que ele faz
+  build-android-release:
+    # Máquina virtual que será usada para executar o job
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout do Código
+      # Baixa o código do seu repositório para a máquina virtual
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
+      # 2. Configurar pnpm (gerenciador de pacotes)
+      # Instala e configura o pnpm, que é mais rápido que o npm
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10 # Versão do pnpm atualizada
+
+      # 3. Configurar Node.js
+      # Instala a versão 24 do Node.js, que será usada pelo pnpm
       - name: Set up Node.js environment
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # Versão do Node.js atualizada
+          cache: "pnpm" # Ativa o cache para as dependências do pnpm
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      # 4. Instalar dependências do projeto
+      # Usa o pnpm para instalar as dependências definidas no package.json
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Install dependencies and initialize Capacitor
-        run: |
-          pnpm install
-          npx cap init android
-
-      - name: Install Java JDK
-        uses: actions/setup-java@v2
+      # 5. Configurar Java JDK
+      # Instala o Java 17, necessário para o build do Android
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
         with:
-          distribution: "adopt"
+          distribution: "temurin" # 'temurin' é o sucessor recomendado de 'adopt'
           java-version: "17"
 
-      - name: Print Java version
-        run: java -version
+      # 6. Configurar Gradle
+      # Configura o Gradle e ativa o cache para acelerar builds futuros
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-      - name: Install Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 7.3
-
+      # 7. Decodificar a Keystore
+      # Converte a sua chave de assinatura (armazenada como um secret Base64) em um arquivo
       - name: Decode Keystore from Base64
-        run: echo "${{ secrets.COOKIE_KEY }}" | base64 --decode > ${{ github.workspace }}/cookie.keystore
-
-      - name: Find debug keystore
+        id: decode_keystore
+        env:
+          # O secret deve conter o arquivo .keystore codificado em Base64
+          KEYSTORE_BASE64: ${{ secrets.COOKIE_KEY }}
         run: |
-          debug_keystore_path="${{ github.workspace }}/cookie.keystore"
-          if [ -f "$debug_keystore_path" ]; then
-            echo "Debug Keystore: $debug_keystore_path"
-          else
-            echo "Debug Keystore not found."
-          fi
+          echo "${KEYSTORE_BASE64}" | base64 --decode > ${{ github.workspace }}/upload.keystore
+          echo "Keystore decoded successfully."
 
+      # 8. Construir a aplicação (Build para Mobile)
+      # Executa o script 'build:mobile' que deve estar no seu package.json
+      # A variável BUILD_TARGET é usada para diferenciar o build mobile do web
+      - name: Build the application for mobile
+        env:
+          BUILD_TARGET: mobile # Variável para o next.config.js saber que é um build estático
+        run: pnpm run build:mobile
+
+      # 9. Adicionar a plataforma Android e sincronizar os arquivos
+      # Adiciona a pasta 'android' se não existir e copia os arquivos da build para dentro dela
+      - name: Add Android platform and sync files
+        run: |
+          pnpm exec cap add android
+          pnpm exec cap sync
+
+      # 10. Dar permissão de execução para o Gradle Wrapper
       - name: Give execute permission to gradlew
         run: chmod +x ./android/gradlew
 
-      - name: Build the React application
-        run: pnpm run build
-
-      - name: Sync files with Capacitor
-        run: pnpm exec cap sync
-
-      - name: Verify Capacitor platform
-        run: pnpm exec cap ls
-
-      - name: Install apksigner
-        run: sudo apt update && sudo apt install -y apksigner
-
-      - name: Build Android APK
+      # 11. Construir o APK e o App Bundle (AAB)
+      # Navega para a pasta android e executa o build de release do Gradle
+      # As variáveis de ambiente são usadas pelo Gradle para assinar o app
+      - name: Build Android Release (APK and AAB)
         env:
-          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/cookie.keystore
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          # Garanta que estes secrets estão configurados no seu repositório GitHub
+          KEYSTORE_PATH: ${{ github.workspace }}/upload.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           cd android
           ./gradlew bundleRelease
           ./gradlew assembleRelease
+          cd ..
 
-      - name: Create draft release
-        uses: softprops/action-gh-release@v1
+      # 12. Criar uma Release no GitHub com os artefatos
+      # Usa a action para criar um rascunho de release e anexa os arquivos .apk e .aab
+      - name: Create Draft Release and Upload Artifacts
+        uses: softprops/action-gh-release@v2
         with:
+          # Cria a release como um rascunho (draft)
           draft: true
+          # Anexa os arquivos gerados no passo anterior
           files: |
-            ${{ github.workspace }}/android/app/build/outputs/bundle/release/*.aab
-            ${{ github.workspace }}/android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+            android/app/build/outputs/apk/release/*.apk
         env:
-          GITHUB_TOKEN: ${{ secrets.POCKET }}
+          # O token é necessário para autenticar e criar a release
+          GITHUB_TOKEN: ${{ secrets.POCKET }} 
