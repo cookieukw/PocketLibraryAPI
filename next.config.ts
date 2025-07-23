@@ -1,8 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  distDir: 'build',
+  // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
+  //trailingSlash: true,
+
+  // Optional: Prevent automatic `/me` -> `/me/`, instead preserve `href`
+  //skipTrailingSlashRedirect: true,
+
+  distDir: "build",
+  images: {
+    unoptimized: true,
+  },
+  //output: 'export',
 };
 
 export default nextConfig;
