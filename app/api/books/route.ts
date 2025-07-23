@@ -17,7 +17,7 @@ interface IBook {
   sizeInBytes: number;
   detailsLink: string;
 }
-
+export const dynamic = 'error';
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, OPTIONS",

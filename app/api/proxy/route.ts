@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-
+export const dynamic = 'error';
 export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get("url");
   const fileName = req.nextUrl.searchParams.get("name") || "arquivo";
