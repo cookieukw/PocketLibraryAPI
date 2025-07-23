@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
   },
   output: "export",
   exclude: ["api", "middleware", "/app/api", "/middleware"],
-  outputFileTracingIgnores: ["app/api**", "/api"],
+  outputFileTracingIgnores: ["app/api**", "api","**/app/api", "**/middleware","**/api"],
 };
 
 export default nextConfig;
