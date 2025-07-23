@@ -7,7 +7,7 @@ import { decode } from "html-entities";
 import { clear, translateKeys } from "@/classes/utils";
 
 // --- Tipos e Constantes ---
-export const dynamic = 'error';
+
 interface BookInfo {
   downloadUrl: string;
   title: string;
