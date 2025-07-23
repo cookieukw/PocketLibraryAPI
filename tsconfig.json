@@ -32,5 +32,5 @@
     "next-env.d.ts",
     "build/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "api", "middleware"]
+  "exclude": ["node_modules"]
 }
