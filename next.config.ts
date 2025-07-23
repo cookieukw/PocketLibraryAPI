@@ -11,10 +11,8 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   output: "export",
-  exclude: ["api", "middleware","/app/api","/middleware"],
-  outputFileTracingExcludes: {
-        '*': ['app/api**',"/api"], // Example: Exclude everything in 'path/to/exclude'
-      },
+  exclude: ["api", "middleware", "/app/api", "/middleware"],
+  outputFileTracingIgnores: ["app/api**", "/api"],
 };
 
 export default nextConfig;
