@@ -3,29 +3,24 @@
 import { useState, useEffect, useMemo } from "react";
 import {
   AppBar,
-  Toolbar,
   Typography,
   TextField,
-  InputAdornment,
   List,
   CircularProgress,
   Box,
   Button,
-  LinearProgress,
   Paper,
   Stack,
   Chip,
   ToggleButton,
   ToggleButtonGroup,
-  Accordion, // NOVO
-  AccordionSummary, // NOVO
-  AccordionDetails, // NOVO
-  IconButton, // NOVO
+  Accordion, 
+  AccordionSummary, 
+  AccordionDetails, 
 } from "@mui/material";
 import {
-  Search,
   ExpandMore as ExpandMoreIcon,
-  Close as CloseIcon,
+
 } from "@mui/icons-material"; // NOVO
 import axios from "axios";
 import dynamic from "next/dynamic";
@@ -194,14 +189,13 @@ const BookList: React.FC = () => {
     skipItems,
   ]);
   // --- Handlers ---
-  const handleFilterChange =
-    (setter: React.Dispatch<React.SetStateAction<any>>) => (value: any) => {
-      setter(value);
-      setSkipItems(0);
-      setBooks([]);
-      setHasMore(true);
-    };
-
+const handleFilterChange =
+  <T,>(setter: React.Dispatch<React.SetStateAction<T>>) => (value: T) => {
+    setter(value);
+    setSkipItems(0);
+    setBooks([]); // Limpa os livros para mostrar o skeleton loader
+    setHasMore(true); // Assume que a nova busca terá mais itens
+  };
   const handleRemoveFilter = (filterKey: keyof typeof defaultFilters) => {
     switch (filterKey) {
       case "mediaType":
@@ -247,7 +241,7 @@ const BookList: React.FC = () => {
       });
     }
     return filters;
-  }, [selectedMediaType, selectedCategory, language, selectedCategoryName]);
+  }, [selectedMediaType, selectedCategory, language, selectedCategoryName,defaultFilters]);
 
   // Adicione esta função ao seu componente BookList
 
