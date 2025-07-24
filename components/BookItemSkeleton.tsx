@@ -1,11 +1,10 @@
-// src/components/BookItemSkeleton.tsx
 
 import {
   ListItem,
   ListItemText,
   ListItemIcon,
   Skeleton,
-  Box,
+
 } from "@mui/material";
 import { motion } from "framer-motion";
 
