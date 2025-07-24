@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-import animation404 from "@/lottie/404.json";
+import animation404 from "@/lottie/no_data.json";
 import { ArrowBack } from "@mui/icons-material";
 import {
     AppBar,
