@@ -82,7 +82,7 @@ export async function GET(
         rawBookData[key] = value;
       }
     });
-    console.log("Dados brutos extraídos:", rawBookData);
+   
     // 2. Extrai o resumo, que está em uma estrutura separada.
     const abstract = infoTable
       .find("tr > td[valign='top'] > span.detalhe2")
@@ -92,7 +92,7 @@ export async function GET(
       rawBookData["Resumo"] = abstract;
     }
 
-    console.log("Resumo extraído:", abstract);
+  
     // 3. Extrai a URL de download, que está escondida dentro de um comentário HTML.
     infoTable
       .find("tr")
@@ -112,7 +112,7 @@ export async function GET(
           : "";
       });
 
-    console.log("URL de download extraída:", downloadUrl);
+  
     // --- Montagem do Objeto Final ---
 
     const translatedData = translateKeys(rawBookData);
