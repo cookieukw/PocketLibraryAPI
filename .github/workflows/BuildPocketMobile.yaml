@@ -69,7 +69,7 @@ jobs:
       - name: Build the application for mobile
         env:
           BUILD_TARGET: mobile # Variável para o next.config.js saber que é um build estático
-        run: pnpm run build:mobile
+        run: pnpm run build
 
       # 9. Adicionar a plataforma Android e sincronizar os arquivos
       # Adiciona a pasta 'android' se não existir e copia os arquivos da build para dentro dela
